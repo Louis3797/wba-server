@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Artifact {
+  id                 String              @id @default(cuid())
+  plannedWorkingTime Float
+  shortDescription   String              @db.VarChar(255)
+  title              String              @db.VarChar(255)
+  task_id            String              @unique
+  task               Task                @relation(fields: [task_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "FK_ARTIFACT_task_id")
+  projectToArtifact  ProjectToArtifact[]
+
+  @@index([task_id], map: "FK_ARTIFACT_task_id")
+}
+
+model Project {
+  id                String              @id @default(cuid())
+  shortDescription  String              @db.VarChar(255)
+  longDescription   String              @db.VarChar(255)
+  logo              String              @db.VarChar(255)
+  startDate         DateTime            @db.Date
+  endDate           DateTime            @db.Date
+  title             String              @db.VarChar(255)
+  projectToArtifact ProjectToArtifact[]
+  projectToTask     ProjectToTask[]
+}
+
+model Task {
+  id               String          @id @default(cuid())
+  shortDescription String          @db.VarChar(255)
+  title            String          @db.VarChar(255)
+  artifact         Artifact?
+  projectToTasks   ProjectToTask[]
+}
+
+model ProjectToArtifact {
+  worktime    Float?   @default(0)
+  artifact_id String
+  project_id  String
+  artifact    Artifact @relation(fields: [artifact_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "FK_PROJECTTOARTIFACT_artifact_id")
+  project     Project  @relation(fields: [project_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "FK_PROJECTTOARTIFACT_project_id")
+
+  @@id([artifact_id, project_id])
+  @@index([artifact_id], map: "FK_PROJECTTOARTIFACT_artifact_id")
+  @@index([project_id], map: "FK_PROJECTTOARTIFACT_project_id")
+}
+
+model ProjectToTask {
+  project_id String
+  task_id    String
+  project    Project @relation(fields: [project_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "FK_PROJECTTOTASK_project_id")
+  task       Task    @relation(fields: [task_id], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "FK_PROJECTTOTASK_task_id")
+
+  @@id([project_id, task_id])
+  @@index([project_id], map: "FK_PROJECTTOTASK_project_id")
+  @@index([task_id], map: "FK_PROJECTTOTASK_task_id")
+}
