@@ -42,7 +42,7 @@ projectRouter.get("/:id/plannedWorkingTime", controller_1.projectController.getP
 /**
  * Calculates working time of the project
  */
-projectRouter.get("/:id/workingTime", controller_1.projectController.getProjectPlannedWorkingTime);
+projectRouter.get("/:id/workingTime", controller_1.projectController.getProjectWorkingTime);
 // * Relational routes
 /**
  * Adds artifact to project

@@ -54,10 +54,7 @@ projectRouter.get(
 /**
  * Calculates working time of the project
  */
-projectRouter.get(
-  "/:id/workingTime",
-  projectController.getProjectPlannedWorkingTime
-);
+projectRouter.get("/:id/workingTime", projectController.getProjectWorkingTime);
 
 // * Relational routes
 

@@ -119,6 +119,7 @@ export const calculateWorkingTime = async (id: string) => {
     return null;
   }
 
+  console.log(project);
   for (const temp of project.projectToArtifact) {
     if (temp.worktime) {
       sum += temp.worktime;
